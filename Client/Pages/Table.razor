@@ -1,15 +1,15 @@
 @page "/table"
+@using gm = Blazor8s.Shared
 
-♦
-♥
-♠
-
-<div class="pcard">
-    <div class="suit-top">A<span> ♣</span></div>
-    <div class="middle-pips"></div>
-    <div class="suit-bottom">A<span> ♣</span></div>
-</div>
-
-<div class="pcard back">
+    @foreach (var card in game.Deck)
+    {
      
-</div>
+        <PlayingCard Card="card"></PlayingCard>
+    
+    }
+
+
+@code{
+    gm.Game game = new();
+
+}
