@@ -1,15 +1,79 @@
 @page "/table"
-@using gm = Blazor8s.Shared
+@using Microsoft.AspNetCore.SignalR.Client
+@inject NavigationManager NavigationManager
+@implements IAsyncDisposable  
 
-    @foreach (var card in game.Deck)
+@if (hasJoinedGame)
+{
+    <h1>You have joined the game!</h1>
+}
+<div class="row">
+    <div class="col">
+        <h1>Players</h1>
+        <ul class="list-group">
+            @foreach (var player in players)
+            {
+                <li class="list-group-item">@player</li>
+            }
+        </ul>
+    </div>
+    <div class="col">
+        <h1>Draw Pile</h1>
+        <div class="pcard back">
+            <span>@deck.Count()</span>
+        </div>
+    </div>
+    <div class="col">
+        <h1>Discard Pile</h1>
+        <PlayingCard Card="singleCard"></PlayingCard>
+    </div>
+</div>
+
+@code {
+
+    List<string> players = new();
+
+
+    private HubConnection hubConnection;
+
+    bool hasJoinedGame = false;
+
+    bool IsConnected => hubConnection.State == HubConnectionState.Connected;
+
+    protected override async Task OnInitializedAsync()
     {
-     
-        <PlayingCard Card="card"></PlayingCard>
-    
+        hubConnection = new HubConnectionBuilder()
+          .WithUrl(NavigationManager.ToAbsoluteUri("/gamehub"))
+          .Build();
+
+        hubConnection.On("JoinedGame", () =>
+        {
+            hasJoinedGame = true;
+            StateHasChanged();  // updates UI
+        });
+
+        hubConnection.On<string>("playerJoined", PlayerJoined);
+
+        await hubConnection.StartAsync();
+
+        // Excute a method to a message back to GameHub
+        await hubConnection.SendAsync("TableJoinGame");  // TableJoinGame is a Method in GameHub
+
+    }
+
+    private void PlayerJoined(string player)
+    {
+        players.Add(player);
+        StateHasChanged();
     }
 
 
-@code{
-    gm.Game game = new();
+    Card singleCard = new Card(CardValue.Ace, CardSuit.Clubs);
 
+    List<Card> deck = CardUtilities.CreateDeck().Shuffle();
+
+    public async ValueTask DisposeAsync()
+    {
+        await hubConnection.DisposeAsync();
+    }
 }

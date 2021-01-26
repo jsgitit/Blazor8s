@@ -68,7 +68,7 @@ a, .btn-link {
 .pcard {
     user-select: none;
     background-color: #fff;
-    border: 5px solid grey;
+    border: 3px solid grey;
     border-radius: 20px;
     width: 9rem;
     height: 11.5rem;

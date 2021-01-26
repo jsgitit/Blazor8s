@@ -8,11 +8,11 @@ namespace Blazor8s.Shared
         public Game()
         {
             Deck = new List<Card>();
-            foreach (Suits suit in Enum.GetValues(typeof(Suits)))
+            foreach (CardSuit suit in Enum.GetValues(typeof(CardSuit)))
             {
                 foreach (CardValue value in Enum.GetValues(typeof(CardValue)))
                 {
-                    Deck.Add(new Card { Suit = suit, Value = value});
+                    Deck.Add(new ( value, suit));
                 }
             }
         }

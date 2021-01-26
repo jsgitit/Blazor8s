@@ -25,6 +25,7 @@ namespace Blazor8s.Server
         public void ConfigureServices(IServiceCollection services)
         {
 
+            services.AddSingleton<GameState>();
             services.AddSignalR();  // added
             services.AddControllersWithViews();
             services.AddRazorPages();
@@ -66,6 +67,7 @@ namespace Blazor8s.Server
                 endpoints.MapRazorPages(); // default
                 endpoints.MapControllers(); // default
                 endpoints.MapHub<ChatHub>("/chathub"); // added
+                endpoints.MapHub<GameHub>("/gamehub"); // added
                 endpoints.MapFallbackToFile("index.html");
             });
         }
