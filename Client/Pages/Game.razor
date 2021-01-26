@@ -1,39 +1,47 @@
 @page "/game"
 @using Microsoft.AspNetCore.SignalR.Client
 @inject NavigationManager NavigationManager
-@implements IAsyncDisposable  
+@implements IAsyncDisposable
 
-<div class="form-group">
-    <label>
-        User:
-        <input @bind="userName"/>
-    </label>
-</div>
-<button @onclick="JoinGame" disabled="@(!IsConnected)">Join Game</button>
+@if (!hasJoined)
+{ 
+    <div class="form-group">
+        <label>
+            User:
+            <input @bind="userName" />
+        </label>
+    </div>
+    <button @onclick="JoinGame" disabled="@(!IsConnected)">Join Game</button>
+}
 
 @code {
     string userName;
+    bool hasJoined = false;
 
-    public bool IsConnected => false;
-    
+    public bool IsConnected => hubConnection.State == HubConnectionState.Connected;
+
     private HubConnection hubConnection;
-    
+
     protected override async Task OnInitializedAsync()
     {
-        // hubConnecdtion = new HubConnectionBuilder()
-        //  .WithUrl(NavigationManager.ToAbsoluteUri("/gamehub"))
-        //  .Build();
-        
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("/gamehub"))
+            .Build();
+
+        hubConnection.On("JoinedGame", PlayerJoined);
+        await hubConnection.StartAsync();
     }
 
-    void JoinGame()
+    void PlayerJoined()
     {
-
+        hasJoined = true;
+        StateHasChanged();
     }
+    Task JoinGame() => hubConnection.SendAsync("PlayerJoinGame", userName);
 
     public async ValueTask DisposeAsync()
     {
-        //await hubConnection.DisposeAsync();
+        await hubConnection.DisposeAsync();
     }
 
 }

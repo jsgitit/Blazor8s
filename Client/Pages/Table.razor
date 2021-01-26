@@ -38,7 +38,7 @@
 
     bool hasJoinedGame = false;
 
-    bool IsConnected => hubConnection.State == HubConnectionState.Connected;
+    public bool IsConnected => hubConnection.State == HubConnectionState.Connected;
 
     protected override async Task OnInitializedAsync()
     {
@@ -52,7 +52,7 @@
             StateHasChanged();  // updates UI
         });
 
-        hubConnection.On<string>("playerJoined", PlayerJoined);
+        hubConnection.On<string>("PlayerJoined", PlayerJoined);
 
         await hubConnection.StartAsync();
 
@@ -61,7 +61,7 @@
 
     }
 
-    private void PlayerJoined(string player)
+    void PlayerJoined(string player)
     {
         players.Add(player);
         StateHasChanged();
