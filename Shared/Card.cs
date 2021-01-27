@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 namespace Blazor8s.Shared
 {
+    // public record Card2(CardValue value, CardSuit suit);
     public class Card
     {
         public Card(CardValue value, CardSuit suit)

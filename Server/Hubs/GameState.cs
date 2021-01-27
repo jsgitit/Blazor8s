@@ -9,8 +9,9 @@ namespace Blazor8s.Server.Hubs
     public class GameState
     {
         public List<Player> Players { get; set; } = new();
-        public bool HasGameStarted { get; set; } 
-        public List<Card> Deck { get; set; } = CardUtilities.CreateDeck().Shuffle();
+        public bool HasGameStarted { get; set; }
+        public Stack<Card> Deck { get; set; } = 
+                new Stack<Card>(CardUtilities.CreateDeck().Shuffle());
 
     }
 

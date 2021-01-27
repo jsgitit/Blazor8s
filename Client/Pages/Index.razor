@@ -2,7 +2,6 @@
 @using Microsoft.AspNetCore.SignalR.Client
 @inject NavigationManager NavigationManager  // a concrete implementation of NavigationManager
 @implements IAsyncDisposable
-
 @* Ref: https://docs.microsoft.com/en-us/aspnet/core/tutorials/signalr-blazor-webassembly?view=aspnetcore-5.0&tabs=visual-studio#add-razor-component-code-for-chat *@
 
 <div class="form-group">
@@ -58,7 +57,7 @@
 
     public bool IsConnected =>
         hubConnection.State == HubConnectionState.Connected;
-        
+
     public async ValueTask DisposeAsync()
     {
         await hubConnection.DisposeAsync();

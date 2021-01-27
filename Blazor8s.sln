@@ -8,7 +8,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor8s.Client", "Client\B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor8s.Shared", "Shared\Blazor8s.Shared.csproj", "{9D5D2AD6-B972-4F93-8EEB-AD68B6DBE8CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor8s.Tests", "Blazor8s.Tests\Blazor8s.Tests.csproj", "{6E1346F3-5E10-4A8F-BE77-906E10CB4501}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor8s.Tests", "Blazor8s.Tests\Blazor8s.Tests.csproj", "{6E1346F3-5E10-4A8F-BE77-906E10CB4501}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

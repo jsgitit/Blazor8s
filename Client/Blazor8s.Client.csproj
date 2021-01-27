@@ -15,4 +15,8 @@
     <ProjectReference Include="..\Shared\Blazor8s.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>

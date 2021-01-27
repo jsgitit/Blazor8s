@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Blazor8s.Shared
 {
@@ -6,6 +7,7 @@ namespace Blazor8s.Shared
     {
         Task JoinedGame();
         Task PlayerJoined(string player);
-
+        Task GameStarted();
+        Task AddHand(List<Card> hand);
     }
 }

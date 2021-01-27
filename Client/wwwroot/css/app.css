@@ -73,7 +73,7 @@ a, .btn-link {
     width: 9rem;
     height: 11.5rem;
     padding: 1rem;
-    display: grid;
+    display: inline-block; /* was grid, changed to inline-block for better horizontal L&F*/
     column-gap: 10px;
     grid-row-gap: 20px;
     grid-template: " suit-top  .            .           " 20px " .         middle-pips  .           " auto " .         .            suit-bottom " 20px;
