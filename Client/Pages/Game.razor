@@ -28,11 +28,11 @@
             .WithUrl(NavigationManager.ToAbsoluteUri("/gamehub"))
             .Build();
 
-        hubConnection.On("JoinedGame", PlayerJoined);
+        hubConnection.On(nameof(IGameHub.JoinedGame), JoinedGame);
         await hubConnection.StartAsync();
     }
 
-    void PlayerJoined()
+    void JoinedGame()
     {
         hasJoined = true;
         StateHasChanged();

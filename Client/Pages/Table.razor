@@ -52,7 +52,7 @@
             StateHasChanged();  // updates UI
         });
 
-        hubConnection.On<string>("PlayerJoined", PlayerJoined);
+        hubConnection.On<string>(nameof(IGameHub.PlayerJoined), PlayerJoined);
 
         await hubConnection.StartAsync();
 
