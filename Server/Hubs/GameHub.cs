@@ -8,12 +8,10 @@ namespace Blazor8s.Server.Hubs
 {
     public class GameHub : Hub<IGameHub>
     {
-        private GameState _state;
-
-        public GameHub(GameState state)
-        {
-            _state = state;
-        }
+        private readonly GameState _state;
+        
+        public GameHub(GameState state) => _state = state;
+        
         public async Task PlayerJoinGame(string name)
         {
             var player = new Player { Name = name };
@@ -27,7 +25,6 @@ namespace Blazor8s.Server.Hubs
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, $"table");
             await Clients.Caller.JoinedGame(Guid.NewGuid());
-            // var players = _state.Players;
         }
 
         public async Task StartGame()
@@ -58,7 +55,7 @@ namespace Blazor8s.Server.Hubs
             player.Hand.Add(newCard);
 
             await Clients.Group(id.ToString()).AddCardToHand(newCard);
-            await Clients.Group("table").UpdateDeckCount(_state.Deck.Count());
+            await Clients.Group("table").UpdateDeckCount(_state.Deck.Count);
         }
 
         public async Task PlayCard(Guid id, Card card)
