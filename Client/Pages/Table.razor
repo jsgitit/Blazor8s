@@ -67,6 +67,7 @@
         hubConnection.On<string>(nameof(IGameHub.PlayerJoined), PlayerJoined);
         hubConnection.On<int, Card>(nameof(IGameHub.GameStarted), GameStarted);
         hubConnection.On<Card>(nameof(IGameHub.DiscardPlayed), DiscardPlayed);
+        hubConnection.On<int>(nameof(IGameHub.UpdateDeckCount), UpdateDeckCount);
 
         await hubConnection.StartAsync();
 
@@ -82,7 +83,12 @@
         StateHasChanged();
 
     }
+    void UpdateDeckCount(int count)
+    {
+        deckCount = count;
+        StateHasChanged();
 
+    }
     void DiscardPlayed(Card card)
     {
         discardCard = card;

@@ -58,6 +58,7 @@ namespace Blazor8s.Server.Hubs
             player.Hand.Add(newCard);
 
             await Clients.Group(id.ToString()).AddCardToHand(newCard);
+            await Clients.Group("table").UpdateDeckCount(_state.Deck.Count());
         }
 
         public async Task PlayCard(Guid id, Card card)

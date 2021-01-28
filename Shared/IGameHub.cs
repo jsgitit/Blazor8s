@@ -14,6 +14,7 @@ namespace Blazor8s.Shared
         Task AddHand(List<Card> hand);
         Task AddCardToHand(Card card);
         Task DiscardPlayed(Card card);
+        Task UpdateDeckCount(int deckCount);
 
     }
 }
