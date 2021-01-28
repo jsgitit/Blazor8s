@@ -12,7 +12,7 @@ namespace Blazor8s.Server.Hubs
         public bool HasGameStarted { get; set; }
         public Stack<Card> Deck { get; set; } = 
                 new Stack<Card>(CardUtilities.CreateDeck().Shuffle());
-
+        public Card LastDiscard { get; set; }
     }
 
     public class Player

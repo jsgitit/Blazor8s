@@ -1,5 +1,6 @@
 ﻿using Blazor8s.Shared;
 using Microsoft.AspNetCore.SignalR;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,13 +20,13 @@ namespace Blazor8s.Server.Hubs
             _state.Players.Add(player);
             await Groups.AddToGroupAsync(Context.ConnectionId, player.Id.ToString());
             await Clients.Group("table").PlayerJoined(name);
-            await Clients.Caller.JoinedGame();
+            await Clients.Caller.JoinedGame(player.Id);
 
         }
         public async Task TableJoinGame()
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, $"table");
-            await Clients.Caller.JoinedGame();
+            await Clients.Caller.JoinedGame(Guid.NewGuid());
             // var players = _state.Players;
         }
 
@@ -46,8 +47,34 @@ namespace Blazor8s.Server.Hubs
                     );
             _state.HasGameStarted = true;
             await Clients.All.GameStarted();
+            _state.LastDiscard = _state.Deck.Pop();
+            await Clients.Group("table").GameStarted(_state.Deck.Count, _state.LastDiscard);
         }
 
+        public async Task DrawCard(Guid id)
+        {
+            var player = _state.Players.Find(p => p.Id == id);
+            var newCard = _state.Deck.Pop();
+            player.Hand.Add(newCard);
 
+            await Clients.Group(id.ToString()).AddCardToHand(newCard);
+        }
+
+        public async Task PlayCard(Guid id, Card card)
+        {
+            // remove the card from the player's hand
+            var player = _state.Players.Find(p => p.Id == id);
+            var playerCard = player.Hand.Find(c => c.Suit == card.Suit && c.Value == card.Value);
+            player.Hand.Remove(playerCard);
+
+            // add to discard pile
+            _state.LastDiscard = card;
+
+            // notify the table
+            await Clients.Group("table").DiscardPlayed(card);
+            // notify player if it was successfull or not
+            await Clients.Caller.DiscardPlayed(card);
+
+        }
     }
 }

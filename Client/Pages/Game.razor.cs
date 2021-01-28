@@ -28,14 +28,32 @@ namespace Blazor8s.Client.Pages
                 .WithUrl(NavigationManager.ToAbsoluteUri("/gamehub"))
                 .Build();
 
-            hubConnection.On(nameof(IGameHub.JoinedGame), JoinedGame);
+            hubConnection.On<Guid>(nameof(IGameHub.JoinedGame), JoinedGame);
             hubConnection.On(nameof(IGameHub.GameStarted), GameStarted);
             hubConnection.On<List<Card>>(nameof(IGameHub.AddHand), AddHand);
+            hubConnection.On<Card>(nameof(IGameHub.AddCardToHand), AddCardToHand);
+            hubConnection.On<Card>(nameof(IGameHub.DiscardPlayed), DiscardPlayed);
             await hubConnection.StartAsync();
         }
 
-        void JoinedGame()
+        void DiscardPlayed(Card card)
         {
+            state.SelectedCard = null;
+            var playerCard = state.Hand.Find(c => c.Suit == card.Suit && c.Value == card.Value);
+            state.Hand.Remove(playerCard);
+            StateHasChanged();
+
+        }
+        void HandleSelectedCard(Card card)
+        {
+            if (state.SelectedCard == card)
+                state.SelectedCard = null;
+            else 
+                state.SelectedCard = card; 
+        }
+        void JoinedGame(Guid id)
+        {
+            state.Id = id;
             HasJoined = true;
             StateHasChanged();
         }
@@ -45,6 +63,14 @@ namespace Blazor8s.Client.Pages
             state.Hand = hand;
         }
 
+        void AddCardToHand(Card card)
+        {
+            state.Hand.Add(card);
+            StateHasChanged();
+        }
+
+        Task PlayCard() => hubConnection.SendAsync("PlayCard", state.Id, state.SelectedCard);
+       
         void GameStarted()
         {
             state.HasGameStarted = true;
@@ -54,6 +80,7 @@ namespace Blazor8s.Client.Pages
 
         Task StartGame() => hubConnection.SendAsync("StartGame");
 
+        Task DrawCard() => hubConnection.SendAsync("DrawCard", state.Id);
         Task JoinGame() => hubConnection.SendAsync("PlayerJoinGame", userName);
 
         public async ValueTask DisposeAsync()

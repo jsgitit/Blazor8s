@@ -9,5 +9,6 @@ namespace Blazor8s.Client
         public Guid Id { get; set; }
         public List<Card> Hand { get; set; } = new();
         public bool HasGameStarted { get; set; } = false;
+        public Card SelectedCard { get; set; }
     }
 }

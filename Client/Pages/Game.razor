@@ -1,5 +1,7 @@
 @page "/game"
 
+<span>Cards: @state.Hand.Count()</span>
+<span>@state.SelectedCard</span>
 
 @if (!HasJoined)
 {
@@ -21,6 +23,8 @@
 {
     foreach (var card in state.Hand)
     {
-        <span><PlayingCard Card="card" /></span>
+        <PlayingCard Card="card" OnCardSelected="HandleSelectedCard"/>
     }
+    <button btn-primary @onclick="DrawCard">Draw</button>
+    <button btn-primary @onclick="PlayCard" disabled="@(state.SelectedCard == null)">Play</button>
 }
