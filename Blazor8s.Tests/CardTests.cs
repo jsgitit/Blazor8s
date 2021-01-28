@@ -1,17 +1,17 @@
-using System;
-using Xunit;
 using Blazor8s.Shared;
-
+using System.Collections.Generic;
+using System.Linq;
+using Xunit;
 
 namespace Blazor8s.Tests
 {
     public class CardTests
     {
         [Fact]
-        public void CanCreateDeck()
+        public void CanGetShuffledDeck()
         {
-            var game = new Game();
-            Assert.Equal(52, game.Deck.Count);
+            List<Card> deck = CardUtilities.GetShuffledDeck();
+            Assert.Equal(52, deck.Distinct().Count());
 
         }
     }
