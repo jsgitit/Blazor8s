@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Blazor8s.Shared;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
-using System.Threading.Tasks;
-using Blazor8s.Shared;
-using Blazor8s.Client;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Blazor8s.Client.Pages
 {
@@ -48,8 +47,8 @@ namespace Blazor8s.Client.Pages
         {
             if (state.SelectedCard == card)
                 state.SelectedCard = null;
-            else 
-                state.SelectedCard = card; 
+            else
+                state.SelectedCard = card;
         }
         void JoinedGame(Guid id)
         {
@@ -70,7 +69,7 @@ namespace Blazor8s.Client.Pages
         }
 
         Task PlayCard() => hubConnection.SendAsync("PlayCard", state.Id, state.SelectedCard);
-       
+
         void GameStarted()
         {
             state.HasGameStarted = true;
