@@ -11,80 +11,69 @@ namespace Blazor8s.Client.Pages
     {
         [Inject] NavigationManager NavigationManager { get; set; }
 
-        string userName;
-        bool HasJoined = false;
-        bool CanStartGame => HasJoined && !state.HasGameStarted; // if player has joined and game has not started, then Start Game button can render
-
-        ClientGameState state = new();
-
-        public bool IsConnected => hubConnection.State == HubConnectionState.Connected;
-
-        private HubConnection hubConnection;
+        private string _userName;
+        private bool _hasJoined = false;
+        private bool _canStartGame => _hasJoined && !_state.HasGameStarted; // if player has joined and game has not started, then Start Game button can render
+        private ClientGameState _state = new();
+        private HubConnection _hubConnection;
+        public bool IsConnected => _hubConnection.State == HubConnectionState.Connected;
 
         protected override async Task OnInitializedAsync()
         {
-            hubConnection = new HubConnectionBuilder()
+            _hubConnection = new HubConnectionBuilder()
                 .WithUrl(NavigationManager.ToAbsoluteUri("/gamehub"))
                 .Build();
 
-            hubConnection.On<Guid>(nameof(IGameHub.JoinedGame), JoinedGame);
-            hubConnection.On(nameof(IGameHub.GameStarted), GameStarted);
-            hubConnection.On<List<Card>>(nameof(IGameHub.AddHand), AddHand);
-            hubConnection.On<Card>(nameof(IGameHub.AddCardToHand), AddCardToHand);
-            hubConnection.On<Card>(nameof(IGameHub.DiscardPlayed), DiscardPlayed);
-            await hubConnection.StartAsync();
+            _hubConnection.On<Guid>(nameof(IGameHub.JoinedGame), JoinedGame);
+            _hubConnection.On(nameof(IGameHub.GameStarted), GameStarted);
+            _hubConnection.On<List<Card>>(nameof(IGameHub.AddHand), AddHand);
+            _hubConnection.On<Card>(nameof(IGameHub.AddCardToHand), AddCardToHand);
+            _hubConnection.On<Card>(nameof(IGameHub.DiscardPlayed), DiscardPlayed);
+            await _hubConnection.StartAsync();
         }
 
         void DiscardPlayed(Card card)
         {
-            state.SelectedCard = null;
-            var playerCard = state.Hand.Find(c => c.Suit == card.Suit && c.Value == card.Value);
-            state.Hand.Remove(playerCard);
-            StateHasChanged();
-
-        }
-        void HandleSelectedCard(Card card)
-        {
-            if (state.SelectedCard == card)
-                state.SelectedCard = null;
-            else
-                state.SelectedCard = card;
-        }
-        void JoinedGame(Guid id)
-        {
-            state.Id = id;
-            HasJoined = true;
-            StateHasChanged();
-        }
-
-        void AddHand(List<Card> hand)
-        {
-            state.Hand = hand;
-        }
-
-        void AddCardToHand(Card card)
-        {
-            state.Hand.Add(card);
-            StateHasChanged();
-        }
-
-        Task PlayCard() => hubConnection.SendAsync("PlayCard", state.Id, state.SelectedCard);
-
-        void GameStarted()
-        {
-            state.HasGameStarted = true;
+            _state.SelectedCard = null;
+            var playerCard = _state.Hand.Find(c => c.Suit == card.Suit && c.Value == card.Value);
+            _state.Hand.Remove(playerCard);
             StateHasChanged();
 
         }
 
-        Task StartGame() => hubConnection.SendAsync("StartGame");
+        private void HandleSelectedCard(Card card) => 
+            _state.SelectedCard = _state.SelectedCard == card ? null : card;
 
-        Task DrawCard() => hubConnection.SendAsync("DrawCard", state.Id);
-        Task JoinGame() => hubConnection.SendAsync("PlayerJoinGame", userName);
+        private void JoinedGame(Guid id)
+        {
+            _state.Id = id;
+            _hasJoined = true;
+            StateHasChanged();
+        }
+
+        private void AddHand(List<Card> hand) => _state.Hand = hand;
+
+        private void AddCardToHand(Card card)
+        {
+            _state.Hand.Add(card);
+            StateHasChanged();
+        }
+        private Task PlayCard() => _hubConnection.SendAsync("PlayCard", _state.Id, _state.SelectedCard);
+
+        private void GameStarted()
+        {
+            _state.HasGameStarted = true;
+            StateHasChanged();
+
+        }
+
+        private Task StartGame() => _hubConnection.SendAsync("StartGame");
+        private Task DrawCard() => _hubConnection.SendAsync("DrawCard", _state.Id);
+        private Task JoinGame() => _hubConnection.SendAsync("PlayerJoinGame", _userName);
 
         public async ValueTask DisposeAsync()
         {
-            await hubConnection.DisposeAsync();
+            await _hubConnection.DisposeAsync();
         }
 
     }

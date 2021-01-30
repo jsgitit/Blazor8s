@@ -1,4 +1,4 @@
-﻿<div class="pcard @CssFaceDown"  @onclick="HandleClick">
+﻿<div class="pcard @(CssFaceDown) @(CssSuit)"  @onclick="HandleClick">
     <div class="suit-top">@Value @Suit</div>
     <div class="middle-pips">
 
@@ -48,6 +48,10 @@
     }
 
     string CssFaceDown => IsFaceDown ? "back" : null;
+
+    // Express CssSuit with the following:
+    string CssSuit => Card.Suit.ToString().ToLower();
+
 
 
 }
