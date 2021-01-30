@@ -1,7 +1,4 @@
 ﻿@page "/"
-@inject NavigationManager NavigationManager  // a concrete implementation of NavigationManager
-@implements IAsyncDisposable
-@* Ref: https://docs.microsoft.com/en-us/aspnet/core/tutorials/signalr-blazor-webassembly?view=aspnetcore-5.0&tabs=visual-studio#add-razor-component-code-for-chat *@
 
 <div class="form-group">
     <label>
@@ -15,8 +12,8 @@
         <input @bind="_messageInput" size="50" />
     </label>
 </div>
-<button @onclick="Send" disabled="@(!IsConnected)">Send</button>
-<button @onclick="Echo" disabled="@(!IsConnected)">Echo</button>
+<button class="btn btn-primary" @onclick="Send" disabled="@(!IsConnected)">Send</button>
+<button class="btn btn-info" @onclick="Echo" disabled="@(!IsConnected)">Echo</button>
 
 <hr>
 

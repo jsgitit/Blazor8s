@@ -11,12 +11,12 @@
             <input @bind="userName" />
         </label>
     </div>
-    <button @onclick="JoinGame" disabled="@(!IsConnected)">Join Game</button>
+    <button class="btn btn-primary" @onclick="JoinGame" disabled="@(!IsConnected)">Join Game</button>
 }
 
 @if (CanStartGame)
 {
-    <button @onclick="StartGame">Start Game</button>
+    <button class="btn btn-primary" @onclick="StartGame">Start Game</button>
 }
 
 @if (state.HasGameStarted)
@@ -25,6 +25,6 @@
     {
         <PlayingCard Card="card" OnCardSelected="HandleSelectedCard"/>
     }
-    <button btn-primary @onclick="DrawCard">Draw</button>
-    <button btn-primary @onclick="PlayCard" disabled="@(state.SelectedCard == null)">Play</button>
+    <button btn btn-primary @onclick="DrawCard">Draw</button>
+    <button btn btn-primary @onclick="PlayCard" disabled="@(state.SelectedCard == null)">Play</button>
 }
