@@ -23,14 +23,15 @@ namespace Blazor8s.Server.Hubs
         }
         public async Task TableJoinGame()
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, $"table");
+            await Groups.AddToGroupAsync(Context.ConnectionId, "table");
             await Clients.Caller.JoinedGame(Guid.NewGuid());
         }
 
         public async Task StartGame()
         {
-            _state.HasGameStarted = true;
             // Deal Players
+            
+            // TODO: consider Enumberable.Range() operator instead of nested loops?
             foreach (var player in _state.Players)
             {
                 for (int i = 0; i < 5; i++)
